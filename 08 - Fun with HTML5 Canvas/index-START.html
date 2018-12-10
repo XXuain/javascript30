@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+
+<!-- 一開始的預設畫布 -->
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+
+const canvas = document.querySelector('#draw');
+
+// 將畫布寬高撐滿至視窗大小
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// 設定繪圖環境為2d
+const ctx = canvas.getContext('2d');
+
+// *繪圖環境 樣式設定*
+ctx.strokeStyle = '#BADA55'; // 預設線條顏色
+ctx.lineJoin = 'round';  // 線條轉角樣式 https://goo.gl/XntWW9
+ctx.lineCap = 'round'; // 線條頭與尾巴樣式 https://goo.gl/82GrwJ
+
+let isDrawing = false; // 用於判斷是否執行畫圖
+let lastX = 0; // 起始點X
+let lastY = 0; // 起始點Y
+
+let hue = 0;
+let direction = false;
+
+function draw (e) {
+  if(!isDrawing) return;
+  // console.log(e);
+  
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+  ctx.beginPath(); // 所有指令都介於beginPath() closePath()
+  ctx.moveTo(lastX, lastY); // 起始點
+  ctx.lineTo(e.offsetX, e.offsetY); // 將起始點與目前滑鼠位置的X、Y用線條連接起來
+  ctx.stroke();
+  [ lastX, lastY ] = [ e.offsetX, e.offsetY ] // 改變起始點位置
+
+  hue ++;
+  if(hue >= 360){
+    hue = 0;
+  }
+
+  if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+    direction = !direction;
+    
+  }
+  if(direction) {
+    ctx.lineWidth++;
+  } else {
+    ctx.lineWidth--;
+  }
+}
+
+// 控制滑鼠是否可以執行畫畫
+canvas.addEventListener('mousedown', (e)=> {
+    isDrawing = true;
+    [ lastX, lastY ] = [ e.offsetX, e.offsetY ]
+  });
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', ()=> isDrawing = false);
+canvas.addEventListener('mouseout', ()=> isDrawing = false);
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>

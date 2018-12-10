@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flex Panels 💪</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+  <!--
+    這次課程CSS知識佔了3分之2了吧 哈哈哈
+
+    **使用者操作需求：**
+    點擊個區塊後，會做展示的效果動畫。
+    效果動畫：點擊後放大該區塊接著滑入上下兩個區塊。
+
+    **技術重點：**
+    運用CSS做效果，JS控制
+    * CSS: flex, transition, transform
+    * JS: toggle(), transitionend
+
+    **流程步驟：**
+    * CSS樣式處理：
+    .panels 裡面包了5個 .panel，這裡用的就是一層一層的 flex包下去
+      1. 在外成標籤 .panels加上 display:flex; 使內層 .panel呈現水平排列，
+        內層 .panel加上 flex:1; 使其平均滿版分配於畫面中
+      2. 在 .panel加上 display:flex並且轉換主籌線方向 flex-direction:columnu由水平轉為垂直，
+        主軸線置中 justify-content: center;
+      3. 沒錯為了讓p裡的字也好對齊，再加上display:flex，主籌線置中 justify-content: center;
+        垂直線置中 align-items: center;
+    
+    * CSS動畫處理：
+      1. 再來就是設定好預設，先將上下兩塊用 transform: translateY(xx) 位移到畫面外
+      2. 當 添加上 .open-active的時候，又會再移回來 transform: translateY(0) 位移0回到原位
+      3. 
+
+    * JS控制CSS動畫樣式:
+      1. 選取所有的 .panel 監聽click事件 執行toggleOpen() 為該 .panel添加 .open樣式
+      2. 並且再多加一個監聽 為transitionend事件，當執行 .open樣式時會觸發並且執行toggleActive() 為該 .panel添加 .open-active樣式
+  
+  -->
+  <style>
+    html {
+      box-sizing: border-box;
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+    }
+    
+    body {
+      margin: 0;
+    }
+    
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    .panels {
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .panel {
+      background: #6B0F9C;
+      box-shadow: inset 0 0 0 5px rgba(255,255,255,0.1);
+      color: white;
+      text-align: center;
+      align-items: center;
+      /* Safari transitionend event.propertyName === flex */
+      /* Chrome + FF transitionend event.propertyName === flex-grow */
+      transition:
+        font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        background 0.2s;
+      font-size: 20px;
+      background-size: cover;
+      background-position: center;
+
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
+    .panel2 { background-image:url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
+    .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
+    .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
+    .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
+
+    /* Flex Children */
+    .panel > * {
+      margin: 0;
+      width: 100%;
+      transition: transform 0.5s;
+      
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 預設為消失 */
+    .panel > *:first-child { transform: translateY(-100%); }
+    .panel > *:last-child { transform: translateY(100%); }
+
+    /* 有.open-active時panel回原位 */
+    .panel.open-active > *:first-child { transform: translateY(0); }
+    .panel.open-active > *:last-child { transform: translateY(0); }
+
+    .panel p {
+      text-transform: uppercase;
+      font-family: 'Amatic SC', cursive;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+      font-size: 2em;
+    }
+    
+    .panel p:nth-child(2) {
+      font-size: 4em;
+    }
+    
+    /* 開啟時的狀態 */
+    .panel.open {
+      flex: 5;
+      font-size: 40px;
+    }
+
+  </style>
+
+
+  <div class="panels">
+    <div class="panel panel1">
+      <p>Hey</p>
+      <p>Let's</p>
+      <p>Dance</p>
+    </div>
+    <div class="panel panel2">
+      <p>Give</p>
+      <p>Take</p>
+      <p>Receive</p>
+    </div>
+    <div class="panel panel3">
+      <p>Experience</p>
+      <p>It</p>
+      <p>Today</p>
+    </div>
+    <div class="panel panel4">
+      <p>Give</p>
+      <p>All</p>
+      <p>You can</p>
+    </div>
+    <div class="panel panel5">
+      <p>Life</p>
+      <p>In</p>
+      <p>Motion</p>
+    </div>
+  </div>
+
+  <script>
+
+    const panels = document.querySelectorAll('.panel');
+    
+    function toggleOpen() {
+      this.classList.toggle('open');
+    }
+    
+    function toggleActive(e) {
+      // console.log(e.propertyName);
+      if(e.propertyName.includes('flex')) {
+        this.classList.toggle('open-active');
+      }
+    }
+
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
+
+  </script>
+
+
+
+</body>
+</html>
