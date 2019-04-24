@@ -1,12 +1,3 @@
-## 資源站
-* [javascript30官網](https://javascript30.com/)
-頁面填寫完email 就會收到課程開通的信了！
-然後就可以立馬開始上課了！
-* [作者的GitHub](https://github.com/wesbos/JavaScript30)
-* [參考練習者的GitHub](https://github.com/guahsu/JavaScript30) <-推推 很完整啊～
-
------
-
 ![https://ithelp.ithome.com.tw/upload/images/20181010/201111641Ql8MmvBjh.png](https://ithelp.ithome.com.tw/upload/images/20181010/201111641Ql8MmvBjh.png)
 ## 使用者操作需求
 當按下按鍵 A,S,D,F,G,H,K,L 按鍵時，播放對應的不同音效，頁面上對應的區塊會增添短暫樣式
