@@ -33,7 +33,7 @@ HTML5標籤`<audio>`用於指定音源檔，增加controls屬性會有基本樣�
 audio.currentTime = 0;
 audio.play();
 ```
-`audio/video.play()` 進行播放影片/音源
+`audio/video.play()` 進行播放影片/音源  
 `audio/video.currentTime="seconds"` 設置當前影片/音源的位置(以秒計)
 範例中連續快速的音效用法：
 添加play()播放音效時，需要等到音效結束，才能播放下一個音效，無法快速連續播放
