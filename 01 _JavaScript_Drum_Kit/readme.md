@@ -2,7 +2,6 @@
 ## 使用者操作需求
 當按下按鍵 A,S,D,F,G,H,K,L 按鍵時，播放對應的不同音效，頁面上對應的區塊會增添短暫樣式
 
-
 ## 技術重點
 * 鍵盤事件 `keydown`
 * HTML5資料屬性`data-*`
@@ -10,7 +9,6 @@
 * 增添樣式 `ClassList.add('')`
 * 取消樣式 使用 `forEach()` `addEventListener` 監聽每個 .key
 * 將物件或字串轉成陣列的方法 `Array.form()`
-
 
 ## 流程步驟
 1. 先定義好 HTML標籤 `data-key`屬性的值

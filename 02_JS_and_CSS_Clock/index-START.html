@@ -3,39 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>JavaScript30 - 02 - JS and CSS Clock | Gua's Note</title>
-    <script src="ga.js"></script>
+    <title>JS + CSS Clock</title>
 </head>
 
 <body>
-    <style>
-        .GuaHsu-header {
-            background-color: #333;
-            text-align: center;
-            padding: 10px;
-            color: #7ff3cb;
-            font-size: 20px;
-            font-weight: 100;
-        }
-        .GuaHsu-header span{
-            margin: 0 5px;
-        }
-        .GuaHsu-header a{
-            text-decoration: none;
-            color: unset;
-        }
-    </style>
-    <div class="GuaHsu-header">
-        <span><a href="https://guahsu.io/categories/JavaScript30/" target="_blank">JavaScript30 心得</a></span>
-        <span>|</span>
-        <span><a href="https://github.com/guahsu/JavaScript30" target="_blank">GitHub</a></span>
-    </div>
+
 
     <div class="clock">
         <div class="clock-face">
-            <div class="hand hour-hand"></div>
-            <div class="hand min-hand"></div>
             <div class="hand second-hand"></div>
+            <div class="hand min-hand"></div>
+            <div class="hand hour-hand"></div>
         </div>
     </div>
 
@@ -48,7 +26,7 @@
             text-align: center;
             font-size: 10px;
         }
-        
+
         body {
             margin: 0;
             font-size: 2rem;
@@ -57,7 +35,7 @@
             min-height: 100vh;
             align-items: center;
         }
-        
+
         .clock {
             width: 30rem;
             height: 30rem;
@@ -66,79 +44,101 @@
             margin: 50px auto;
             position: relative;
             padding: 2rem;
-            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), inset 0 0 0 3px #EFEFEF, inset 0 0 10px black, 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow:
+                0 0 0 4px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 3px #EFEFEF,
+                inset 0 0 10px black,
+                0 0 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .clock-face {
             position: relative;
             width: 100%;
             height: 100%;
             transform: translateY(-3px);
             /* account for the height of the clock hands */
-            transform: rotate(90deg);
-            /*add*/
         }
-        
-        .hand {
-            width: 50%;
-            background: black;
+
+        .clock-face::after {
+            content: '';
             position: absolute;
-            top: 50%;
-            transform-origin: 100%;
+            top:50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+
+        .hand {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* top: 50%; */
+            /* transform-origin: 100%;
             transform: rotate(90deg);
             transition: all 0.05s;
-            transition-timing-function: cubic-bezier(0.35, 2.65, 1, 1);
-            border-radius: 50%;
-            /*add*/
+            transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1); */
         }
-        /*add*/
-        
-        .second-hand {
-            height: 2px;
-            background: #c11f1f;
-        }
-        
-        .min-hand {
-            height: 4px;
-            width: 45%;
-            margin-left: 5%;
-            background: black;
-        }
-        
-        .hour-hand {
-            height: 6px;
-            width: 35%;
-            margin-left: 15%;
-            background: black;
-        }
-    </style>
 
+        .second-hand::after{
+            position: absolute;
+            content: '';
+            display:  block;
+            background-color: rgb(235, 35, 0);
+            width: 5px;
+            height: 50%;
+            left: 50%;
+            bottom: 50%;
+            transform: translate(-50%, 0%);
+        }
+
+        .min-hand::after {
+            position: absolute;
+            content: '';
+            display:  block;
+            background-color: rgb(255, 255, 255);
+            width: 8px;
+            height: 40%;
+            left: 50%;
+            bottom: 50%;
+            transform: translate(-50%, 0%);
+        }
+
+        .hour-hand::after {
+            position: absolute;
+            content: '';
+            display:  block;
+            background-color: rgb(255, 255, 255);
+            width: 10px;
+            height: 30%;
+            left: 50%;
+            bottom: 50%;
+            transform: translate(-50%, 0%);
+        }
+
+    </style>
     <script>
-        const secondHand = document.querySelector('.second-hand');
-        const minHand = document.querySelector('.min-hand');
-        const hourHand = document.querySelector('.hour-hand');
-        function setDate() {
-            const now = new Date();
-            const seconds = now.getSeconds();
-            const mins = now.getMinutes();
-            const hour = now.getHours();
-            let secondsDegress = ((seconds / 60) * 360);
-            secondHand.style.transform = setRotate(secondsDegress);
-            let minsDegress = ((mins / 60) * 360);
-            minHand.style.transform = setRotate(minsDegress);
-            let hourDegress = ((hour / 12) * 360) + ((mins / 12 / 60) * 360);
-            hourHand.style.transform = setRotate(hourDegress);
-        }
-        //GuaHsu 若傳入角度為0，則不顯示動畫效果避免354~0的rotate反彈跳
-        function setRotate(deg) {
-            if (deg === 0) {
-                document.querySelector('.hand').style.transition = 'all 0s';
-            } else {
-                document.querySelector('.hand').style.transition = 'all 0.05s';
+        ;(function(){
+            const sec = document.querySelector('.second-hand');
+            const min = document.querySelector('.min-hand');
+            const hur = document.querySelector('.hour-hand');
+
+            function setClock() {
+                const date = new Date();
+                const secDeg = date.getSeconds() * 6;   //(360 * 60)
+                const minDeg = date.getMinutes() * 6 + secDeg / 60;   //(360 * 60)
+                const hurDeg = date.getHours() * 30 + minDeg / 60;  //(360 * 12)
+                
+                sec.style.transform = `rotate(${secDeg}deg)`;
+                min.style.transform = `rotate(${minDeg}deg)`;
+                hur.style.transform = `rotate(${hurDeg}deg)`;
             }
-            return `rotate(${deg}deg)`;
-        }
-        setInterval(setDate, 1000);
+            setClock(); // 初始化
+            setInterval(setClock, 1000);
+        })()
     </script>
 </body>
 
