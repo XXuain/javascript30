@@ -18,8 +18,6 @@
     <input id="base" type="color" name="base" value="#ffc600">
   </div>
 
-  <div id="test" data-no="123" data-name="yy" data-time="00:00"></div>
-
   <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
 
   <style>
@@ -63,9 +61,6 @@
 
   <script>
     const inputs = document.querySelectorAll('.controls input');
-    
-    console.log(document.querySelector('#test').dataset);
-
 
     function handleUpdate() {
       const suffix = this.dataset.sizing || '';
