@@ -88,6 +88,8 @@
         passed: 1909
       }
     ];
+    inventors.forEach((inventor)=> inventor.years = inventor.passed - inventor.year)
+    console.table(inventors);
 
     // 逗點分隔的姓名資料陣列
     const people = ['Beck, Glenn', 'Becker, Carl', 'Beckett, Samuel', 'Beddoes, Mick', 'Beecher, Henry',
@@ -100,21 +102,20 @@
       'Blair, Tony', 'Blake, William'
     ];
 
-    // Array.prototype.filter()
+
+
+
     // 1. 篩選出於1500~1599年間出生的inventor(year in 1500-1599)
     // ***function寫法***
     const born_ = inventors.filter(function(invent, i, arr){
       if( invent.year >= 1500 && invent.year <= 1599 ) {
         return true;
-      } else {
-        return false;
       }
     });
     // ***ES6寫法***
     const born = inventors.filter((invent) => invent.year >= 1500 && invent.year <= 1599);
-    console.table(born);
+    // console.table(born);
 
-    // Array.prototype.map()
     // 2. 將inventors內的first與last組合成一個陣列
     // ***function寫法***
     const fullName_ = inventors.map(function(inventor){
@@ -122,16 +123,13 @@
     });
     // ***ES6寫法***
     const fullName = inventors.map((invent) => `${invent.first} ${invent.last}`);
-    console.table(fullName);
+    // console.table(fullName);
 
-    // Array.prototype.sort()
+
+
+
     // 3. 依據生日由大至小排序所有的inventor
-    // const num = [4, 2, 5, 1, 3]
-    // num.sort(function(a,b){
-    //   let res = a - b;
-    //   return res;
-    // });
-    // console.log(num);
+
     // ***function寫法***
     const birthday_ = inventors.sort(function(a,b){
       if(a.year < b.year){
@@ -141,36 +139,71 @@
       }
     });
     // ***ES6寫法***
-    const birthday = inventors.sort((a, b) => a.year < b.year ? -1 : 1);
-    console.table(birthday);
+    // const birthday = inventors.sort((a, b) => a.year < b.year ? -1 : 1);
+    const birthday = inventors.sort((a,b) => a.year - b.year);
+    // console.table(birthday);
 
-    // Array.prototype.reduce()
-    // 4. 加總所有inventor的在世時間
+
+
+
+    // 4. 加總所有 inventor 的在世時間
+    // 以前做法
+    let total = 0 ;
+    inventors.forEach((inventor)=>{
+      total += inventor.passed - inventor.year;
+    });
+    
     const tatol = inventors.reduce(function (total, inventor) {
       return total + (inventor.passed - inventor.year);
     }, 0);
 
-    // 5. 依據年齡由大至小排序所有的inventor
-    const oldest = inventors.sort(function (a, b) {
-        const last = a.passed - a.year;
-        const next = b.passed - b.year;
-        return last > next ? -1 : 1;
-    });
-    console.table(oldest);
+    // console.log(total); 
+
+
+
+    // 5. 依據年齡由大至小排序所有的 inventor
+    let oldest = inventors.sort((a,b) => {
+      return (a.passed - a.year) - (b.passed - b.year);
+    })
+    // console.table(oldest);
 
     // 6. 列出wiki中巴黎所有包含'de'的路名(在wiki中透過querySelectorAll來選取資料作篩選)
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
 
+    let ary = [];
+    document.querySelectorAll('.mw-category li a').forEach((a)=> {
+      ary.push(a.title)
+    });
+    let titleDe = ary.filter(title => title.indexOf('de') !== -1);
+
     // 7. sort Exercise
     // Sort the people alphabetically by last name
+    let lastNameSort = people.sort((a,b) => {
+      let [aFirst, aLast] = a.split(', ');
+      let [bFirst, bLast] = b.split(', ');
 
+      return aLast[0] > bLast[0] ? 1 : aLast[0] < bLast[0] ? -1 : 0;
+    })
+    // console.table(lastNameSort);
+
+    
+    
     // 8. Reduce Exercise
-    // Sum up the instances of each of these
-
+    
     // 有重複資料的陣列
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car',
       'truck'
     ];
+    // Sum up the instances of each of these
+    const transportation = data.reduce((obj, item) => {
+        if (!obj[item]) obj[item] = 1
+        else obj[item] +=1
+        return obj
+    }, {});
+
+    console.table(transportation);
+
+    
   </script>
 </body>
 
