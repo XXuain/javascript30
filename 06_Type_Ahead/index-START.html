@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Type Ahead 👀</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <form class="search-form">
@@ -14,66 +16,116 @@
       <li>or a state</li>
     </ul>
   </form>
-<script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  <script>
+    const endpoint =
+      'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
-const cities = [];
+    const cities = [];
+    const suggestions = document.querySelector('.suggestions');
 
-// fetch(endpoint, function(data){
-//   console.log(data);
-// })
+    // 撈資料
+    fetch(endpoint)
+      .then(res => res.json())
+      .then(data => cities.push(...data));
 
-// const prom = fetch(endpoint);
-// console.log(prom);
-// 回傳不是data 是promise， 所以要操作promise
+    // 使用者 輸入匡處理
+    document.querySelector('.search').addEventListener('keyup', filterArray);
 
-fetch(endpoint).then(data => console.log(data));
+    function filterArray() {
 
-fetch(endpoint)
-  .then(blob => blob.json()) // 取blob裡面的JSON
-  .then(data => cities.push(...data)); //用data來接 並逐筆push到 cities[]
+      // 處理使用者輸入內容
+      let filter = this.value.trim();
+      let regexp = new RegExp(filter, 'gi');
 
-// 過濾
-// findMatches(city & state關鍵字, cities))
-function findMatches(wordToMatch, cities) {
-  return cities.filter(place => {
+      // 依照輸入內容 過濾 cities 資料
+      let filterCities = cities.filter((city) => {
+        return city.city.match(regexp) || city.state.match(regexp)
+      });
 
-    // 使用RegExp 正規表達式抓取關鍵字。g:全部 i:不分大小寫
-    const regex = new RegExp(wordToMatch, 'gi');
-    return place.city.match(regex) || place.state.match(regex);
-  })
-}
+      // 處理畫面
+      let html = filterCities.map((filtercity) => {
 
-function displayMatches() {
-  // this.value 抓取input值，丟進findMatches()
-  const matchArray = findMatches(this.value, cities);
+        // 處理螢光筆內容 不會因輸入匡內容大小寫影響
+        let cache = Object.assign({}, filtercity);
+        let field = ["city", "state"];
+        field.forEach((item) => {
+          let match = cache[item].match(regexp);
+          console.log(match);
 
-  // 接到回傳逐筆塞入html裡面
-  const html = matchArray.map(place => {
-    // 將關鍵字加上螢光樣式，用取代的方式替換掉輸入的關鍵字
-    const regex = new RegExp(this.value, 'gi');
-    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
-    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+          // 螢光筆樣式
+          if (match) cache[item] = cache[item].replace(regexp, `<span class='hl'>${match[0]}</span>`);
+        });
+        let cityName = cache.city;
+        let stateName = cache.state;
 
-    return `
-      <li>
-        <span class="name">${cityName}, ${stateName}</span>
-        <span class="population">${place.population}</span>
-      </li>
-    `;
-  }).join('');
-  console.log(html);
-  suggestions.innerHTML = html;
-  //louisiana
-}
-
-const searchInput = document.querySelector('.search');
-const suggestions = document.querySelector('.suggestions');
-
-searchInput.addEventListener('change', displayMatches);
-searchInput.addEventListener('keyup', displayMatches);
+        return `
+          <li>
+            <span class="name">${cityName}, ${stateName}</span>
+            <span class="population">${filtercity.population}</span>
+          </li>
+        `
+      }).join('');
+      suggestions.innerHTML = html;
+    }
 
 
-</script>
-  </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // let cities = [];
+
+    // fetch(endpoint).then(function (res) {
+    //   res.json().then(function (obj) {
+    //     cities.push(...obj);
+    //   })
+    // });
+
+    // // const json = require('./cities.json');
+    // // console.log(json);
+
+    // document.querySelector('.search').addEventListener('keyup', function () {
+
+    //   let filter = this.value.trim();        // 抓取內容 使用 trim() 去除前後空白
+    //   let regexp = new RegExp(filter, 'gi'); // 使用正規式 整個內容並且不分大小寫
+
+    //   let filterCities = cities.filter(function(city){
+    //     return city.city.match(regexp) || city.state.match(regexp);
+    //   })
+
+    //   let html = filterCities.map(function(city){
+    //     return 
+    //   })
+
+    // })
+  </script>
+</body>
+
 </html>
