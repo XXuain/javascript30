@@ -9,3 +9,4 @@
 - 推薦 GitHub 中文解說 [guahsu/JavaScript30](https://github.com/guahsu/JavaScript30)
 
 
+test travis
